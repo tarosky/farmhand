@@ -82,10 +82,12 @@ jobs:
           asset_content_type: application/zip
 
   release:
-
     name: Publish npm package
     needs: [ lambda ]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@master
 
@@ -101,6 +103,4 @@ jobs:
         run: bash bin/build.sh ${{ github.ref }}
 
       - name: Publish package
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN_TAROSKY }}
+        run: npm publish --provenance --access public
